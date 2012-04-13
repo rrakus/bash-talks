@@ -687,6 +687,7 @@ echo $(echo $(echo $(echo $(echo Too much nested))))
  * after word splitting
  * pattern matching when bash saw * ? [
  * alphabetically (current locale) sorted list of files
+ * in basic don't match hidden (dotted) files
  * shopt - nocaseglob, nullglob, failglob, dotglob
 
 --newpage pattern_matching
@@ -857,9 +858,57 @@ for i in "${arr[@]}"; do
 done
 --endoutput
 
+--newpage bash_parameters
+--heading Bash special parameters
+* expands to the positional parameters
+@ expands to the positional parameters
+# expands to the number of positional parameters
+? expands to the exit status the most recently executed command
+- expands to the current option flags
+$ expands to the process ID of the shell, but in subshell it's parent shell
+! expands to pid of the most recently executed background process
+0 expands to the name of shell or shell script
+_
+
+--newpage bash_parameters_example
+--heading Bash special parameters example
+--beginoutput
+#!/bin/bash
+echo 'Difference between $* and $@'
+for parameter in "$*"; do
+  echo $parameter
+  echo "$parameter"
+  echo ---
+done
+echo 'end of $*'
+for parameter in "$@"; do
+  echo $parameter
+  echo "$parameter"
+  echo ---
+done
+echo 'end of $@'
+--endoutput
+
+--newpage bash_parameters_exercise
+--heading Bash special parameters exercise
+Write a script which will print out number of parameters and will print them out one per line.
+
+for example: ./number.sh "a s d" a s d
+will print out
+4
+a s d
+a
+s
+d
 
 --newpage DU2
 --heading Home Work 2
-DU2:
-
-
+DU2 TODO:
+command substitution
+brace expansion
+arithmetic expansion
+filename expansion
+pipeline
+env variables, sourcing
+array
+special bash variables (parameters)
