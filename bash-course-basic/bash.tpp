@@ -719,11 +719,46 @@ done
 for f in *dir*/*file.???; do ... done
 --endoutput
 
+--newpage case
+--heading case statements
+--color red
+case word in [ [(] pattern [| pattern]...) command-list ;;]... esac
+--color black
+ * selectively execute commands corresponding to first matched pattern
+ * can have more patterns to one match - pat1|pat2|pat3
+ * ) terminates pattern list
+ * Can use ;; or ;& or ;;& to terminate command-list
+ * return status 0 if no pattern matched, else return status of last command
+
+--newpage case_example
+--heading case example
+--beginoutput
+var=dog
+case $var in
+  dog|horse|cat) echo "It has 4 legs";;
+  man|kangaroo) echo "It has 2 legs";;
+  *) echo "I don't know what is $var";;
+esac
+--endoutput
+
+--newpage case_example_2
+--heading case example 2
+--beginoutput
+case $1 in
+  "") echo "argument 1 not set or empty";;
+  a*) echo "It beggins with a";;
+  ???) echo "It has 3 characters";;
+  *b*) echo "It has b character";;
+  *) echo "It's everything else";;
+esac
+--endoutput
+
 --newpage pipelines
 --heading Pipelines
  * sequence of simple commands separated by | or |&
 command1 | command2 | command3
  * stdout of command1 is connected to stdin of command2 and command2 to command3
+ * |& redirects also stderr to stdin
  * run every command in subshell
 
 --newpage environment
@@ -912,3 +947,16 @@ pipeline
 env variables, sourcing
 array
 special bash variables (parameters)
+
+2 types of scripts
+take arguments
+error printing function
+
+
+1:
+Take 2 arguments, 1st low number, 2nd high number, prints prime numbers in range
+
+test prime number
+
+2:
+
