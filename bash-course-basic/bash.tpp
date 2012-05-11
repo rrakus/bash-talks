@@ -938,25 +938,12 @@ d
 
 --newpage DU2
 --heading Home Work 2
-DU2 TODO:
-command substitution
-brace expansion
-arithmetic expansion
-filename expansion
-pipeline
-env variables, sourcing
-array
-special bash variables (parameters)
+Script which can list and count files in some directory. Script will be able to recognize file extension and directory.
+List will print on stdout one file per line.
+Count will print number on stdout (with end of line).
+Script will be able to print usage.
+Files means also directories - any type of file
 
-2 types of scripts
-take arguments
-error printing function
-
-
-1:
-Take 2 arguments, 1st low number, 2nd high number, prints prime numbers in range
-
-test prime number
-
-2:
-
+Example:
+script.sh list /home/rrakus .jpg
+script.sh count /home/rrakus
