@@ -947,3 +947,18 @@ Files means also directories - any type of file
 Example:
 script.sh list /home/rrakus .jpg
 script.sh count /home/rrakus
+
+--newpage references
+--heading References
+Bash Reference Manual
+ bashref.pdf in bash-doc rpm
+ http://www.gnu.org/software/bash/manual/bashref.html
+
+Advanced Bash-Scripting Guide
+ http://tldp.org/LDP/abs/html/
+
+BASH Frequently Asked Questions (on Greg's Wiki)
+ http://mywiki.wooledge.org/BashFAQ
+ http://mywiki.wooledge.org/EnglishFrontPage
+
+many others
