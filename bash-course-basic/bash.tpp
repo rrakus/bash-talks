@@ -103,6 +103,13 @@ cd
 ls -la / /home/rrakus
 --endoutput
 
+--newpage bash_script_exercise
+--heading bash script exercise
+Write your own script which will just print on the screen Hello World.
+Make the script executable
+
+hint: use chmod, echo (or printf)
+
 --newpage Variables
 --heading Variables
  * bash uses parameteres, variable is special parameter
