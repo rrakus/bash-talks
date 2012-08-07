@@ -130,6 +130,17 @@ cat $var $var2
 $var $var2
 --endoutput
 
+--newpage Variables_example_output
+--heading Variables example output
+--beginshelloutput
+$ ./01-variables-example.sh
+Hello World
+cat: Hello: No such file or directory
+cat: World: No such file or directory
+./01-variables-example.sh: line 6: Hello: command not found
+--endshelloutput
+Return code 127
+
 --newpage for_cycle
 --heading Cycle for
 --color red
@@ -149,13 +160,26 @@ do
 done
 --endoutput
 
+--newpage for_cycle_example_output
+--heading Example of for cycle output
+--beginshelloutput
+$ ./02-for-cycle-example.sh
+I
+like
+how
+words
+are
+splitted
+--endshelloutput
+Return code 0
+
 --newpage quoting
 --heading Quoting
  * Used to remove special meaning
  * single quotes - '#$^$%&'
    Preserves literal value
  * double quotes - "will be one word"
-   Preserves literal value, but $ ' ,
+   Preserves literal value, but $ ` \
  * escape character - \" \' \\
    Preserves literal value of next char
  * special characters - | & ; ( < > , " ' \ #
@@ -170,6 +194,16 @@ echo '$foo $bar $baz'
 echo "$foo $bar $baz"
 --endoutput
 
+--newpage quoting_example_output
+--heading Quoting example output
+--beginshelloutput
+$ ./03-quoting-example.sh
+bar Will be splitted?
+$foo $bar $baz
+bar  Will be splitted?
+--endshelloutput
+Return code 0
+
 --newpage quoting_for_cycle
 --heading Quoting and for cycle
 --beginoutput
@@ -182,10 +216,28 @@ for name in "$foo" "$bar" "$baz"; do echo $name; done
 for name in $foo "$bar $baz"; do echo "$name"; done
 --endoutput
 
+--newpage quoting_for_cycle_output
+--heading Quoting and for cycle output
+--beginshelloutput
+$ ./04-quoting-and-for-example.sh
+bar
+Will
+be
+splitted?
+bar Will be splitted?
+$foo $bar $baz
+bar
+
+Will be splitted?
+bar
+ Will be splitted?
+--endshelloutput
+Return code 0
+
 --newpage for_cycle_exercise
 --heading For cycle exercise
 Write a script which will use 2 varibles, first will be "Hello World"
-and second will be "$foo $bar $baz" (both strings literally).
+and second will be "$foo $bar $baz" (both strings literally, without quotes).
 Use for cycle to print above strings, one per line
 
 --newpage conditionals
