@@ -292,6 +292,13 @@ b=1
 echo $a $b $c
 --endoutput
 
+--newpage arithmetic_expression_example_output
+--heading Arithmetic expression example output
+--beginshelloutput
+$ ./05-arithmetic-example1.sh
+10 1 19
+--endshelloutput
+
 --newpage arithmetic_expression_example_2
 --heading Arithmetic expression example II
 --beginoutput
@@ -303,6 +310,13 @@ op2="-"
 ((c=a $op1 b $op2 a $op1 b))
 echo $a $b $c
 --endoutput
+
+--newpage arithmetic_expression_example_2_output
+--heading Arithmetic expression example II output
+--beginshelloutput
+$ ./06-arithmetic-example2.sh
+10 1 2
+--endshelloutput
 
 --newpage if_then_else
 --heading Conditional constructs
@@ -323,6 +337,13 @@ if [[ a < b ]]; then
 fi
 --endoutput
 
+--newpage if_example_1_output
+--heading Conditional example I output
+--beginshelloutput
+$ ./07-if-example1.sh
+Yes, a is before b
+--endshelloutput
+
 --newpage if_example_2
 --heading Conditional example II
 --beginoutput
@@ -333,6 +354,13 @@ else
   echo "b<a"
 fi
 --endoutput
+
+--newpage if_example_2_output
+--heading Conditional example II output
+--beginshelloutput
+$ ./08-if-example2.sh
+b<a
+--endshelloutput
 
 --newpage if_example_3
 --heading Conditional example III
@@ -345,6 +373,13 @@ else
 fi
 --endoutput
 
+--newpage if_example_3_output
+--heading Conditional example III output
+--beginshelloutput
+$ ./09-if-example3.sh
+b<a
+--endshelloutput
+
 --newpage if_example_4
 --heading Conditional example IV
 --beginoutput
@@ -355,6 +390,13 @@ else
   echo "b<a"
 fi
 --endoutput
+
+--newpage if_example_4_output
+--heading Conditional example IV output
+--beginshelloutput
+$ ./10-if-example4.sh
+a<b
+--endshelloutput
 
 --newpage if_example_5
 --heading Conditional example V
@@ -367,6 +409,13 @@ else
 fi
 --endoutput
 
+--newpage if_example_5_output
+--heading Conditional example V output
+--beginshelloutput
+$ ./11-if-example5.sh
+a<b
+--endshelloutput
+
 --newpage if_example_6
 --heading Conditional example VI
 --beginoutput
@@ -376,6 +425,13 @@ else
   echo "not"
 fi
 --endoutput
+
+--newpage if_example_6_output
+--heading Conditional example VI output
+--beginshelloutput
+$ ./12-if-example6.sh 
+not
+--endshelloutput
 
 --newpage if_exercise
 --heading Conditional exercise
