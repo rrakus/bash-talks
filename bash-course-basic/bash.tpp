@@ -456,10 +456,21 @@ while ./test_script.sh; do echo "test script returns 0"; done
 a=2;b=10;while (( a < b )); do echo "$a < $b"; (( a+= 2 )); done
 --endoutput
 
-
---##TODO--newpage while_loop_exercise
---##TODO--heading While loop exercise
---##TODOWrite a script which will use 3 variables.
+--newpage while_loop_example_output
+--heading While loop example output
+--beginshelloutput
+$ ./13-while-example.sh 
+c cccc
+cc cccc
+ccc cccc
+test script returns 0
+test script returns 0
+test script returns 0
+2 < 10
+4 < 10
+6 < 10
+8 < 10
+--endshelloutput
 
 --newpage command_lists
 --heading List of commands
