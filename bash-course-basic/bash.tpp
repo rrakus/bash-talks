@@ -499,6 +499,46 @@ while ... done && echo "While success" || echo "while failure"
  * {} will execute list in current shell
  * variables created in subshell are not visible in parent shell
 
+--newpage grouping_commands_example
+--heading Grouping commands example
+--beginoutput
+a=5
+{
+  a=7
+  b=10
+  echo $a $b
+}
+echo $a $b
+--endoutput
+
+--newpage grouping_commands_example_output
+--heading Grouping commands example output
+--beginshelloutput
+$ ./14-group-example.sh
+7 10
+7 10
+--endshelloutput
+
+--newpage grouping_commands_example_2
+--heading Grouping commands example 2
+--beginoutput
+a=5
+(
+  a=7
+  b=10
+  echo $a $b
+)
+echo $a $b
+--endoutput
+
+--newpage grouping_commands_example_output_2
+--heading Grouping commands example output 2
+--beginshelloutput
+$ ./15-group-example2.sh
+7 10
+5
+--endshelloutput
+
 --newpage functions
 --heading Functions
 --color red
@@ -525,6 +565,16 @@ my_echo ()
 my_echo
 my_echo
 --endoutput
+
+--newpage functions_example_output
+--heading Functions example output
+--beginshelloutput
+$ ./16-function-example.sh
+Hello
+World
+Hello
+World
+--endshelloutput
 
 --newpage positional_parameters
 --heading Positional parameters
