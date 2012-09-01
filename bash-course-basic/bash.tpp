@@ -594,6 +594,21 @@ run the script
  * ./test 1 2 3 4 5 6 7 8 9 0
  * ./test "$not_set"
 
+--newpage positional_parameters_example_output
+--heading Positional parameters example output
+--beginshelloutput
+$ ./17-parameteres-example.sh a b c d
+a b c d
+$ ./17-parameteres-example.sh "a b c d"
+a b c d
+$ ./17-parameteres-example.sh
+
+$ ./17-parameteres-example.sh 1 2 3 4 5 6 7 8 9 0
+1 2 3 4
+$ ./17-parameteres-example.sh "$not_set"
+
+--endshelloutput
+
 --newpage positional_and_functions
 --heading Positional parameters in function
  * function's positional parameters set when fce is invoked
@@ -619,6 +634,17 @@ fce "1 2"
 fce 1
 --endoutput
 
+--newpage positional_functions_example_output
+--heading Positional parameters in function example I output
+--beginshelloutput
+$ ./18-parameteres-function-example.sh
+2
+1
+1
+2
+--endshelloutput
+Return code 1
+
 --newpage positional_functions_example_2
 --heading Positional parameters in function example II
 --beginoutput
@@ -635,6 +661,26 @@ fce "bread and butter" "fish and chips" "beers and girls"
 fce ""
 --endoutput
 
+--newpage positional_functions_example_2_output
+--heading Positional parameters in function example II output
+--beginshelloutput
+$ ./19-parameteres-function-example2.sh
+1
+2
+3
+4
+5
+6
+7
+8
+9
+1 2 3 4 5 6 7 8 9
+bread and butter
+fish and chips
+beers and girls
+
+--endshelloutput
+
 --newpage functions_exercise
 --heading Functions exercise
 Write a script with a function. Function will take exactly 3 arguments.
@@ -644,7 +690,9 @@ Write a script with a function. Function will take exactly 3 arguments.
 Function will print count times string and ends with ending string.
 When not proper arguments return 1, else 0.
 
-fce 1 ahoj cau
+Example: fce 3 ahoj cau
+ahoj
+ahoj
 ahoj
 cau
 
