@@ -721,6 +721,14 @@ echo Hello > output.txt World
 cat output.txt
 --endoutput
 
+--newpage redirections_example_output
+--heading Redirections example output
+--beginshelloutput
+$ ./20-redirection-example.sh
+Hello World
+Hello World
+--endshelloutput
+
 --newpage redirections_2
 --heading Redirections II
  * > word - redirect standard output
@@ -744,6 +752,17 @@ this_command_doesn_exist &>> output.txt
 cat output.txt
 --endoutput
 
+--newpage redirections_example_2_output
+--heading Redirections example II output
+--beginshelloutput
+$ ./21-redirection-example2.sh
+Hello World
+Hello World
+Hello World
+Hello World
+./21-redirection-example2.sh: line 8: this_command_doesn_exist: command not found
+--endshelloutput
+
 --newpage redirection_3
 --heading Redirections III
  * < word - redirect standard input
@@ -766,7 +785,7 @@ tail -n10 < output.txt > output2.txt # tail -n10 output.txt > output2.txt
 --heading Redirections example IV
 --beginoutput
 i=5
-if [[ $i -gt 4 ]]; then
+if (( $i > 4 )); then
   head -n5
   echo ---
   cat
@@ -798,6 +817,30 @@ done
 EOL
 --endoutput
 
+--newpage here_doc_example_output
+--heading Here documents example output
+--beginoutput
+$ ./22-heredoc-example.sh
+$ cat script.sh
+#!/bin/bash
+echo Hello World
+for i in H e l l o W o r l d; do
+  echo
+done
+$ bash script.sh
+Hello World
+
+
+
+
+
+
+
+
+
+
+--endshelloutput
+
 --newpage here_doc_example_2
 --heading Here documents example II
 --beginoutput
@@ -809,6 +852,24 @@ for i in H e l l o W o r l d; do
 done
 EOL
 --endoutput
+
+--newpage here_doc_example_2_output
+--heading Here documents example II output
+--beginshelloutput
+$ ./23-heredoc-example2.sh
+$ bash script.sh
+Hello World
+H
+e
+l
+l
+o
+W
+o
+r
+l
+d
+--endshelloutput
 
 --newpage here_string
 --heading Here strings
@@ -869,6 +930,47 @@ done
 echo BOOM
 --endoutput
 
+--newpage brace_expansion_example_output
+--heading Brace expansion example output
+--beginshelloutput
+$ ./24-brace-example.sh
+run
+roman
+run
+10
+9
+8
+7
+6
+5
+4
+3
+2
+1
+0
+BOOM
+--endshelloutput
+
+--newpage brace_expansion_example_output_cont
+--heading Brace expansion example output cont.
+--beginshelloutput
+$ ls dir*
+dir1:
+file001  file034  file067  file100
+
+dir2:
+file001  file034  file067  file100
+
+dir3:
+file001  file034  file067  file100
+
+dir4:
+file001  file034  file067  file100
+
+dir5:
+file001  file034  file067  file100
+--endshelloutput
+
 --newpage brace_expansion_exercise
 --heading Brace Expansion Exercise
 Create a simple script which will print numbers from 100 to 0 descending.
@@ -884,6 +986,13 @@ $((expression))
 --beginoutput
 a=5; b=66; echo "a*b=$((a*b))"
 --endoutput
+
+--newpage arithmetic_expansion_example_output
+--heading Arithmetic Expansion Example output
+--beginshelloutput
+$ ./25-arithmetic-expansion-example.sh
+a*b=330
+--endshelloutput
 
 --newpage command_substitution
 --heading Command Substitution
@@ -905,6 +1014,16 @@ echo It takes $time seconds
 echo It takes $((endtime - starttime)) seconds
 echo $(echo $(echo $(echo $(echo Too much nested))))
 --endoutput
+
+--newpage command_substitution_example_output
+--heading Command Substitution Exmaple output
+--beginshelloutput
+$ ./26-command-substitution-example.sh
+We started at 1346573233 on machine roman-notebook
+It takes 5 seconds
+It takes 5 seconds
+Too much nested
+--endshelloutput
 
 --newpage filename_expansion
 --heading Filename Expansion
@@ -940,8 +1059,64 @@ done
 for hidden in .*; do
   echo hidden: "$hidden"
 done
-for f in *dir*/*file.???; do ... done
+for f in *dir*/*file.???; do echo $f; done
 --endoutput
+
+--newpage filename_expansion_example_output
+--heading Filename Expansion Example output
+When you have only the script in directory:
+--beginshelloutput
+$ ./27-filename-expansion-example.sh
+file: 27-filename-expansion-example.sh
+directory: */
+hidden: .
+hidden: ..
+*dir*/*file.???
+--endshelloutput
+
+--newpage filename_expansion_example2
+--heading Filename Expansion Example 2
+Good to use nullglob shell option
+--beginoutput
+edir='/tmp/empty'
+rm -rf "$edir"
+mkdir "$edir"
+shopt -s nullglob
+for file in "$edir"/*
+do
+  echo "$file"
+done
+touch "$edir"/file{1..3}
+for file in "$edir"/*
+do
+  echo "$file"
+done
+rm -rf "$edir"
+mkdir "$edir"
+shopt -u nullglob
+for file in "$edir"/*
+do
+  echo "$file"
+done
+touch "$edir"/file{1..3}
+for file in "$edir"/*
+do
+  echo "$file"
+done
+--endoutput
+
+--newpage filename_expansion_example2
+--heading Filename Expansion Example 2
+--beginshelloutput
+$ ./28-filename-expansion-example2.sh 
+/tmp/empty/file1
+/tmp/empty/file2
+/tmp/empty/file3
+/tmp/empty/*
+/tmp/empty/file1
+/tmp/empty/file2
+/tmp/empty/file3
+--endshelloutput
 
 --newpage case
 --heading case statements
@@ -965,6 +1140,13 @@ case $var in
 esac
 --endoutput
 
+--newpage case_example_output
+--heading case example output
+--beginshelloutput
+$ ./29-case-example.sh
+It has 4 legs
+--endshelloutput
+
 --newpage case_example_2
 --heading case example 2
 --beginoutput
@@ -977,6 +1159,19 @@ case $1 in
 esac
 --endoutput
 
+--newpage case_example_2_output
+--heading case example 2 output
+--beginshelloutput
+$ for i in "" abc bcd bcde zabc vwxyz 's p a c e s'; do ./30-case-example2.sh "$i"; done
+argument 1 not set or empty
+It beggins with a
+It has 3 characters
+It has b character
+It has b character
+It's everything else
+It's everything else
+--endshelloutput
+
 --newpage pipelines
 --heading Pipelines
  * sequence of simple commands separated by | or |&
@@ -984,6 +1179,24 @@ command1 | command2 | command3
  * stdout of command1 is connected to stdin of command2 and command2 to command3
  * |& redirects also stderr to stdin
  * run every command in subshell
+
+--newpage pipelines_example
+--heading Pipelines example
+--beginoutput
+cat /etc/passwd | cut -d : -f1 | grep '^r'
+--endoutput
+
+--newpage pipelines_example_output
+--heading Pipelines example output
+--beginshelloutput
+$ ./31-pipeline-example.sh
+root
+rpc
+rpcuser
+rrakus
+rtkit
+radvd
+--endshelloutput
 
 --newpage environment
 --heading Environment
@@ -1027,6 +1240,20 @@ export foobarbaz="exported variable"
 echo "$foobarbaz"
 --endoutput
 
+--newpage environment_example_output
+--heading Environment variables example output
+--beginshelloutput
+$ ./32-environment-example.sh
+/usr/lib64/qt-3.3/bin:/usr/kerberos/sbin:/usr/kerberos/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/rrakus/cov-sa-linux64-5.4.0/bin:/home/rrakus/bin:/home/rrakus/cov-sa-linux64-5.4.0/bin
+
+/usr/lib64/qt-3.3/bin:/usr/kerberos/sbin:/usr/kerberos/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/rrakus/cov-sa-linux64-5.4.0/bin:/home/rrakus/bin:/home/rrakus/cov-sa-linux64-5.4.0/bin
+Set for this command only
+
+/usr/lib64/qt-3.3/bin:/usr/kerberos/sbin:/usr/kerberos/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/rrakus/cov-sa-linux64-5.4.0/bin:/home/rrakus/bin:/home/rrakus/cov-sa-linux64-5.4.0/bin
+exported variable
+exported variable
+--endshelloutput
+
 --newpage builtins
 --heading bash builtins
  * Commands built into bash itself
@@ -1069,6 +1296,16 @@ is_running "bash" && echo "bash is running"
 is_running "firefox" && echo "firefox is running"
 --endoutput
 
+--newpage source_example_output
+--heading Source Example output
+--beginshelloutput
+$ ./33-source-example.sh
+
+0.0.1
+bash is running
+firefox is running
+--endshelloutput
+
 --newpage source_exercise
 --heading Source exercise
 Write a script which will be sourced and provides functions to compute factorial and to write Fibonacci's n-th number. Source that script in other script and use it's functions.
@@ -1096,6 +1333,18 @@ for i in "${arr[@]}"; do
 done
 --endoutput
 
+--newpage arrays_example_output
+--heading Arrays Example output
+--beginshelloutput
+$ ./34-arrays-example.sh
+jedna
+dve
+tri
+jedna
+dve
+tri
+--endshelloutput
+
 --newpage arrays_example_2
 --heading Arrays Example 2
 --beginoutput
@@ -1104,6 +1353,24 @@ for i in "${arr[@]}"; do
   echo "$i"
 done
 --endoutput
+
+--newpage arrays_example_2_output
+--heading Arrays Example 2 output
+--beginshelloutput
+$ ./35-arrays-example2.sh
+01-variables-example.sh
+02-for-cycle-example.sh
+03-quoting-example.sh
+04-quoting-and-for-example.sh
+05-arithmetic-example1.sh
+06-arithmetic-example2.sh
+07-if-example1.sh
+08-if-example2.sh
+09-if-example3.sh
+10-if-example4.sh
+11-if-example5.sh
+...
+--endshelloutput
 
 --newpage arrays_example_3
 --heading Arrays Example 3
@@ -1116,6 +1383,18 @@ for i in "${arr[@]}"; do
   echo "$i"
 done
 --endoutput
+
+--newpage arrays_example_3_output
+--heading Arrays Example 3 output
+--beginshelloutput
+$ ./36-arrays-example3.sh
+Vyska: 175
+Vaha: 75
+Vek: 28
+75
+28
+175
+--endshelloutput
 
 --newpage bash_parameters
 --heading Bash special parameters
@@ -1147,6 +1426,27 @@ for parameter in "$@"; do
 done
 echo 'end of $@'
 --endoutput
+
+--newpage bash_parameters_example_output
+--heading Bash special parameters example output
+--beginshelloutput
+$ ./37-special-parameters-example.sh a b ' a b '
+Difference between $* and $@
+a b a b
+a b  a b 
+---
+end of $*
+a
+a
+---
+b
+b
+---
+a b
+ a b 
+---
+end of $@
+--endshelloutput
 
 --newpage bash_parameters_exercise
 --heading Bash special parameters exercise
