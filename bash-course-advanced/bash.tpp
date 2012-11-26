@@ -6,18 +6,47 @@
 
 --## TODO:
 --## advanced parameter expansion ${var:-par} etc.
+
 --## IFS, PATH and maybe other shell variables
+
 --## echo vs printf
+--##  - long text with "" maybe others and var expansion
+--##  - -e -n and other variable values
+
 --## [[ ={=,~} ]] regexp pattern matching, BASH_REMATCH
+--##  - match variable with some regexp
+--##  - ???
+
 --## read builtin - while read with < redirection, TMOUT
+--## - use read, IFS=, == and =~ regexp matching
+--## - ???
+
 --## <() >() substitutions
+--## - diff of two commands
+--## - use read, IFS... and output of some command:
+--##   while IFS= read... < <(command)
+
 --## trap builtin
+--##  - to catch some signal
+--##  - to do something when exiting
+
 --## debugging?
+--##  - set -x
+--##  - trap?
+--##  - ???
+
+--newpage schedule
+--heading Schedule
+ * 2 lecters, each 3 hours long
+ * 3rd lecture for questions
+ * Ask whenever you want
+ * Course will consist of theory-example-exercise parts
+ * 2 homeworks
 
 --newpage agenda
 --heading Agenda
  * Advanced parameter expansion
- * Shell variables - IFS, PATH, PIPESTATUS, FUNCNEST, GLOBIGNORE
+ * Shell variables - IFS, PATH, PIPESTATUS, FUNCNEST, GLOBIGNORE...
  * echo vs printf
  * Pattern matching in [[ expression ]]
  * read, mapfile builtins
@@ -25,7 +54,7 @@
  * trap builtin
  * a bit of debugging
 
---newpage advanced_parameter_expansion
+--newpage APE
 --heading Advanced parameter expansion
 Example: ${parameter:-word}
 On word is performed
@@ -37,7 +66,7 @@ On word is performed
 Nested quoting has unspecified effect
 "${var:-"$var"}"
 
---newpage advanced_parameter_expansion_2
+--newpage APE2
 --heading Advanced parameter expansion II
 --color red
 ${parameter:-word}
@@ -46,7 +75,7 @@ If parameter is unset or null, the expansion of word is substituted. Otherwise, 
 
 Ommit colon and bash tests only for existence (unset).
 
---newpage advanced_parameter_expansion_2_example
+--newpage APE2e
 --heading Advanced parameter expansion II example
 --beginoutput
 a="set and have value"
@@ -60,7 +89,7 @@ echo ${b-"word used"}
 echo ${c-"word used"}
 --endoutput
 
---newpage advanced_parameter_expansion_2_example_output
+--newpage APE2o
 --heading Advanced parameter expansion II example output
 --beginoutput
 $ ./01-parameter-expansion1.sh
@@ -72,7 +101,7 @@ set and have value
 word used
 --endoutput
 
---newpage advanced_parameter_expansion_3
+--newpage APE3
 --heading Advanced parameter expansion III
 --color red
 ${parameter:=word}
@@ -83,7 +112,7 @@ In other words, assign if have not value and substitute.
 Cannot use special parameters nor positional parameters to assign to.
 Ommit colon and bash tests only for existence (unset).
 
---newpage advanced_parameter_expansion_3_example
+--newpage APE3e
 --heading Advanced parameter expansion III example
 --beginoutput
 unset a b c
@@ -107,7 +136,7 @@ echo ${c-"word used"}
 echo "$a" "$b" "$c"
 --endoutput
 
---newpage advanced_parameter_expansion_3_example output
+--newpage APE3o
 --heading Advanced parameter expansion III example output
 --beginoutput
 $ ./02-parameter-expansion2.sh
@@ -121,21 +150,21 @@ word used
 set and have value
 --endoutput
 
---newpage advanced_parameter_expansion_4
+--newpage APE4
 --heading Advanced parameter expansion IV
 --color red
 ${parameter:?word}
 --color black
 If parameter is unset (or null), on stderr print word message and shell exits. Otherwise parameter is substituted.
 
---newpage advanced_parameter_expansion_4_example
+--newpage APE4e
 --heading Advanced parameter expansion IV example
 --beginoutput
 echo "The 1st parameter is: ${1:?Parameter 1 is not set}"
 echo "The 2nd parameter is: ${2:?}"
 --endoutput
 
---newpage advanced_parameter_expansion_4_example output
+--newpage APE4o
 --heading Advanced parameter expansion IV example output
 --beginoutput
 $ ./03-parameter-expansion3.sh
@@ -151,7 +180,7 @@ The 1st parameter is: one
 ./03-parameter-expansion3.sh: line 3: 2: parameter null or not set
 --endoutput
 
---newpage advanced_parameter_expansion_5
+--newpage APE5
 --heading Advanced parameter expansion V
 --color red
 ${parameter:offset}
@@ -163,7 +192,7 @@ Negative offset - offset from the end of string
 Negative length - second offset from the end, result is between 2 offsets
 Can use indexed arrays and positional parameters
 
---newpage advanced_parameter_expansion_5_example
+--newpage APE5e
 --heading Advanced parameter expansion V example
 --beginoutput
 var="123456789" # string with length 9
@@ -179,7 +208,7 @@ printf '[%s]\n' "${@:1:3}"
 printf '[%s]\n' "${@: -4:3}"
 --endoutput
 
---newpage advanced_parameter_expansion_5_example output
+--newpage APE5o
 --heading Advanced parameter expansion V example output
 --beginoutput
 $ ./04-parameter-expansion4.sh {a..z}
@@ -202,7 +231,7 @@ $ ./04-parameter-expansion4.sh {a..z}
 [y]
 --endoutput
 
---newpage advanced_parameter_expansion_6
+--newpage APE6
 --heading Advanced parameter expansion VI
 --color red
 ${#parameter}
@@ -211,7 +240,7 @@ The length of parameter in characters.
 Can use @ or * - number of positional parameters
 Can use array with @ or * subscript - number of elements in array
 
---newpage advanced_parameter_expansion_6_example
+--newpage APE6e
 --heading Advanced parameter expansion VI example
 --beginoutput
 var="123456789" # string with length 9
@@ -222,7 +251,7 @@ printf '[%s]\n' "${#arr[@]}"
 printf '[%s]\n' "${#@}"
 --endoutput
 
---newpage advanced_parameter_expansion_6_example_output
+--newpage APE6o
 --heading Advanced parameter expansion VI example output
 --beginoutput
 $ ./05-parameter-expansion5.sh 'one parameter'
@@ -232,7 +261,7 @@ $ ./05-parameter-expansion5.sh 'one parameter'
 [1]
 --endoutput
 
---newpage advanced_parameter_expansion_7
+--newpage APE7
 --heading Advanced parameter expansion VII
 --color red
 ${!prefix*}
@@ -240,7 +269,7 @@ ${!prefix@}
 --color black
 Expands to variable names beginning with prefix
 
---newpage advanced_parameter_expansion_8
+--newpage APE8
 --heading Advanced parameter expansion VIII
 --color red
 ${!name[@]}
@@ -248,7 +277,7 @@ ${!name[*]}
 --color black
 Expands to the list of array indices (keys)
 
---newpage advanced_parameter_expansion_9
+--newpage APE9
 --heading Advanced parameter expansion IX
 --color red
 ${parameter#word}
@@ -260,7 +289,7 @@ ${parameter##word}
 * Can use @ or * - positional parameters are used. Result is a list
 * Can use array with @ or *
 
---newpage advanced_parameter_expansion_9_example
+--newpage APE9e
 --heading Advanced parameter expansion IX example
 --beginoutput
 var="foofoobarbaz"
@@ -271,7 +300,7 @@ printf '%s\n' "${var##*a}"
 printf '%s\n' "${@#?[a-c]*?}"
 --endoutput
 
---newpage advanced_parameter_expansion_9_example_output
+--newpage APE9o
 --heading Advanced parameter expansion IX example output
 --beginoutput
 $ ./06-parameter-expansion6.sh a{b..f}ghi
@@ -286,7 +315,7 @@ aeghi
 afghi
 --endoutput
 
---newpage advanced_parameter_expansion_10
+--newpage APE10
 --heading Advanced parameter expansion X
 --color red
 ${parameter%word}
@@ -295,7 +324,7 @@ ${parameter%word}
 * similar to # and ##
 * match the trailing portion
 
---newpage advanced_parameter_expansion_10_example
+--newpage APE10e
 --heading Advanced parameter expansion X example
 --beginoutput
 var="foofoobarbazbaz"
@@ -306,7 +335,7 @@ printf '%s\n' "${var%%o*}"
 printf '%s\n' "${@%?*[a-c]*?}"
 --endoutput
 
---newpage advanced_parameter_expansion_10_example_output
+--newpage APE10o
 --heading Advanced parameter expansion X example output
 --beginoutput
 $ ./07-parameter-expansion7.sh a{b..f}ghi
@@ -321,9 +350,374 @@ aeghi
 afghi
 --endoutput
 
---newpage advanced_parameter_expansion_11
+--newpage APE11
 --heading Advanced parameter expansion XI
---beginoutput
+--color red
 ${parameter/pattern/string}
+--color black
+* Replace pattern longest match with string on parameter
+* Pattern is same like in filename expansion
+* Pattern can specialy begin with:
+  / - all matches are replaced
+  # - must match beginning
+  % - must match at the end
+* Can use array substcipt * or @ to substitute all members of array
+
+--newpage APE11e
+--heading Advanced parameter expansion XI example
+--beginoutput
+var=foobarbazfoobarbaz
+echo "${var/a/e}"
+echo "${var/ar/eq}"
+echo "${var/[obr]?[af]/X}"
+echo "${var//a/e}"
+echo "${var//ar/eq}"
+echo "${var//o/e}"
+echo "${var//[obr]?[af]/X}"
+echo "${var/#foo/XXX}"
+echo "${var/%foo/XXX}"
+echo "${var/#baz/XXX}"
+echo "${var/%baz/XXX}"
+echo "${var/*o/X}"
 --endoutput
+
+--newpage APE11o
+--heading Advanced parameter expansion XI example output
+--beginoutput
+$ ./08-parameter-expansion8.sh
+fooberbazfoobarbaz
+foobeqbazfoobarbaz
+foXrbazfoobarbaz
+fooberbezfooberbez
+foobeqbazfoobeqbaz
+feebarbazfeebarbaz
+foXXzfoXXz
+XXXbarbazfoobarbaz
+foobarbazfoobarbaz
+foobarbazfoobarbaz
+foobarbazfoobarXXX
+Xbarbaz
+--endoutput
+
+--newpage APE12
+--heading Advanced parameter expansion XII
+--color red
+${parameter^pattern}
+${parameter^^pattern}
+${parameter,pattern}
+${parameter,,pattern}
+--color black
+ * case modification on letters matching the pattern
+ * pattern like in filename expansion
+ * ^ to uppercase, only first letter. ^^ all letters
+ * , to lowercase, only first letter. ,, all letters
+
+--newpage APE12e
+--heading Advanced parameter expansion XII example
+--beginoutput
+#!/bin/bash
+var=foobarbazfoobarbaz
+echo 'f:' "${var^f}"
+echo 'b:' "${var^b}"
+echo 'fb:' "${var^fb}"
+echo '[fb]:' "${var^[fb]}"
+echo 'fo:' "${var^fo}"
+echo '*': "${var^*}"
+echo 'f:' "${var^^f}"
+echo 'b:' "${var^^b}"
+echo 'fb:' "${var^^fb}"
+echo '[fb]:' "${var^^[fb]}"
+echo 'fo:' "${var^^fo}"
+echo '*:' "${var^^*}"
+--endoutput
+
+--newpage APE12o
+--heading Advanced parameter expansion XII example output
+--beginoutput
+$ ./09-parameter-expansion9.sh
+f: Foobarbazfoobarbaz
+b: foobarbazfoobarbaz
+fb: foobarbazfoobarbaz
+[fb]: Foobarbazfoobarbaz
+fo: foobarbazfoobarbaz
+*: Foobarbazfoobarbaz
+f: FoobarbazFoobarbaz
+b: fooBarBazfooBarBaz
+fb: foobarbazfoobarbaz
+[fb]: FooBarBazFooBarBaz
+fo: foobarbazfoobarbaz
+*: FOOBARBAZFOOBARBAZ
+--endoutput
+
+--newpage APE-ex
+--heading Advanced parameter expansion exercise
+--color green
+TODO
+--color black
+
+--newpage SHV
+--heading Shell variables
+--color red
+BASH_SOURCE BASH_LINENO BASHPID DIRSTACK FUNCNAME FUNCNEST GLOBIGNORE IFS LANG LC_ALL LC_COLLATE LC_CTYPE LC_MESSAGE LC_NUMERIC LINENO PATH PIPESTATUS PWD RANDOM SECONDS
+--color black
+
+--newpage SHV2
+--heading Shell variables - BASHPID
+--color red
+BASHPID
+--color black
+Expands to process ID of the current bash process.
+Different than $$, on subshell...
+
+--newpage SHV2e
+--heading Shell variables - BASHPID example
+--beginoutput
+#!/bin/bash
+echo $BASHPID
+echo $$
+(
+  echo $BASHPID
+  echo $$
+)
+BASHPID=666
+echo $BASHPID
+--endoutput
+
+--newpage SHV2o
+--heading Shell variables - BASHPID example output
+--beginoutput
+$ ./10-bash-variables1.sh
+27696
+27696
+27697
+27696
+27696
+--endoutput
+
+--newpage SHV3
+--heading Shell variables - DIRSTACK
+--color red
+DIRSTACK
+--color black
+ * array containing directory stack
+ * stack manipulated with pushd and popd builtins
+ * can modify by assigning to array member
+ * cannot add or remove without calling pushd, popd
+
+--newpage SHV3e
+--heading Shell variables - DIRSTACK example
+--beginoutput
+#!/bin/bash
+printf '<%s>\n' "${DIRSTACK[@]}" "---"
+pushd /tmp >/dev/null
+pushd / > /dev/null
+pushd /home > /dev/null
+printf '<%s>\n' "${DIRSTACK[@]}" "---"
+DIRSTACK[3]="/just/modified"
+printf '<%s>\n' "${DIRSTACK[@]}" "---"
+popd > /dev/null
+popd > /dev/null
+popd > /dev/null
+printf '<%s>\n' "${DIRSTACK[@]}" "---"
+--endoutput
+
+--newpage SHV3o
+--heading Shell variables - DIRSTACK example output
+--beginoutput
+$ ./11-bash-variables2.sh
+<~/git/bash-talks/bash-course-advanced/scripts>
+<--->
+</home>
+</>
+</tmp>
+</home/rrakus/git/bash-talks/bash-course-advanced/scripts>
+<--->
+</home>
+</>
+</tmp>
+</just/modified>
+<--->
+./11-bash-variables2.sh: line 11: popd: /just/modified: No such file or directory
+</tmp>
+</just/modified>
+<--->
+--endoutput
+
+--newpage SHV4
+--heading Shell variables - FUNCNAME
+--color red
+FUNCNAME BASH_SOURCE BASH_LINENO
+--color black
+ * array variables
+ * contains call stack of functions, source file names, line numbers
+ * index 0 - current function executed
+ * last index - main
+
+--newpage SHV4e
+--heading Shell variables - FUNCNAME example
+--beginoutput
+#!/bin/bash
+f1() {
+  for i in ${!FUNCNAME[@]}; do
+    printf '%s at %s[%s]\n' "${FUNCNAME[$i]}" "${BASH_SOURCE[$i]}" "${BASH_LINENO[$i]}"
+  done
+  echo '^^ f1 ^^'
+  f2
+}
+f2() {
+  for i in ${!FUNCNAME[@]}; do
+    printf '%s at %s[%s]\n' "${FUNCNAME[$i]}" "${BASH_SOURCE[$i]}" "${BASH_LINENO[$i]}"
+  done
+  echo '^^ f2 ^^'
+}
+f1 && echo ---
+f2 && echo ---
+--endoutput
+
+--newpage SHV4o
+--heading Shell variables - FUNCNAME example output
+--beginoutput
+$ ./12-bash-variables3.sh
+f1 at ./12-bash-variables3.sh[15]
+main at ./12-bash-variables3.sh[0]
+^^ f1 ^^
+f2 at ./12-bash-variables3.sh[7]
+f1 at ./12-bash-variables3.sh[15]
+main at ./12-bash-variables3.sh[0]
+^^ f2 ^^
+===
+f2 at ./12-bash-variables3.sh[16]
+main at ./12-bash-variables3.sh[0]
+^^ f2 ^^
+===
+--endoutput
+
+--newpage SHV5
+--heading Shell variables - FUNCNEST
+--color red
+FUNCNEST
+--color black
+ * maximum function nesting
+ * have to set it
+ * value greater than 0
+
+--newpage SHV5e
+--heading Shell variables - FUNCNEST example
+--beginoutput
+#!/bin/bash
+FUNCNEST=$1
+printf 'FUNCNEST = %s\n' "$FUNCNEST"
+f()
+{
+ ((i++))
+ f
+}
+i=0
+f
+printf 'Nested %d times\n' "$i"
+--endoutput
+
+--newpage SHV5o
+--heading Shell variables - FUNCNEST example output
+--beginoutput
+$ ./13-bash-variables4.sh
+FUNCNEST = 
+Segmentation fault
+
+$ ./13-bash-variables4.sh 5
+FUNCNEST = 5
+./13-bash-variables4.sh: line 7: f: maximum function nesting level exceeded (5)
+Nested 5 times
+--endoutput
+
+--newpage SHV6
+--heading Shell variables - GLOBIGNORE
+--color red
+GLOBIGNORE
+--color black
+ * colon separated list of patterns
+ * filename expansion ignores files matched by defined patterns
+
+--newpage SHV6e
+--heading Shell variables - GLOBIGNORE example
+--beginoutput
+#!/bin/bash
+echo "GLOBIGNORE = $GLOBIGNORE"
+printf '<%s>\n' 0*
+GLOBIGNORE=*2.sh:*4*.sh
+echo "GLOBIGNORE = $GLOBIGNORE"
+printf '<%s>\n' 0*
+--endoutput
+
+--newpage SHV6o
+--heading Shell variables - GLOBIGNORE example output
+--beginoutput
+$ ./14-bash-variables5.sh
+GLOBIGNORE = 
+<01-parameter-expansion1.sh>
+<02-parameter-expansion2.sh>
+<03-parameter-expansion3.sh>
+<04-parameter-expansion4.sh>
+<05-parameter-expansion5.sh>
+<06-parameter-expansion6.sh>
+<07-parameter-expansion7.sh>
+<08-parameter-expansion8.sh>
+<09-parameter-expansion9.sh>
+GLOBIGNORE = *2.sh:*4*.sh
+<01-parameter-expansion1.sh>
+<03-parameter-expansion3.sh>
+<05-parameter-expansion5.sh>
+<06-parameter-expansion6.sh>
+<07-parameter-expansion7.sh>
+<08-parameter-expansion8.sh>
+<09-parameter-expansion9.sh>
+--endoutput
+
+--newpage SHV7
+--heading Shell variables - IFS
+--color red
+IFS
+--color black
+ * internat field separator
+ * each character is used for splitting
+ * used on word splitting (after expansions)
+
+--newpage SHV7e
+--heading Shell variables - IFS example
+--beginoutput
+#!/bin/bash
+var="Hello my _fuc*ing_ World"
+myprint()
+{
+  printf 'IFS: %q\n' "$IFS"
+  printf '<%s>\n' $var
+}
+
+myprint
+IFS= myprint
+IFS='_' myprint
+IFS='*yd:' myprint
+--endoutput
+
+--newpage SHV7o
+--heading Shell variables - IFS example output
+--beginoutput
+$ ./15-bash-variables6.sh
+IFS: $' \t\n'
+<Hello>
+<my>
+<_fuc*ing_>
+<World>
+IFS: ''
+<Hello my _fuc*ing_ World>
+IFS: _
+<Hello my >
+<fuc*ing>
+< World>
+IFS: \*yd:
+<Hello m>
+< _fuc>
+<ing_ Worl>
+--endoutput
+
 
