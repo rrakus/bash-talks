@@ -35,6 +35,9 @@
 --##  - trap?
 --##  - ???
 
+--## Du - cetnost slov? cetnost znaku
+--## du - neco jako basename, 
+
 --newpage schedule
 --heading Schedule
  * 2 lecters, each 3 hours long
@@ -680,44 +683,118 @@ IFS
 --color black
  * internat field separator
  * each character is used for splitting
- * used on word splitting (after expansions)
+ * used during word splitting
+ * on parameter expansion, command substitution, arithmetic expansion
+ * on unquoted with double quotes
+ * Beware filename expansion!
 
 --newpage SHV7e
 --heading Shell variables - IFS example
 --beginoutput
 #!/bin/bash
-var="Hello my _fuc*ing_ World"
-myprint()
+
+p()
 {
-  printf 'IFS: %q\n' "$IFS"
-  printf '<%s>\n' $var
+  printf 'IFS=%q\n' "$IFS"
+  printf '<%s>' "$@"
+  echo
 }
 
-myprint
-IFS= myprint
-IFS='_' myprint
-IFS='*yd:' myprint
+v="a  b- c.* ..d"
+p $(date)
+p $v
+p $((2**10 + 21))
+
+IFS='.0:'
+p $(date)
+p $v
+p $((2**10 + 21))
+
+p "$(date)"
+p "$v"
+p "$((2**10 + 21))"
 --endoutput
 
 --newpage SHV7o
 --heading Shell variables - IFS example output
 --beginoutput
 $ ./15-bash-variables6.sh
-IFS: $' \t\n'
-<Hello>
-<my>
-<_fuc*ing_>
-<World>
-IFS: ''
-<Hello my _fuc*ing_ World>
-IFS: _
-<Hello my >
-<fuc*ing>
-< World>
-IFS: \*yd:
-<Hello m>
-< _fuc>
-<ing_ Worl>
+IFS=$' \t\n'
+<Sun><Dec><2><16:14:36><CET><2012>
+IFS=$' \t\n'
+<a><b-><c.*><..d>
+IFS=$' \t\n'
+<1045>
+IFS=.0:
+<Sun Dec  2 16><14><36 CET 2><12>
+IFS=.0:
+<a  b- c><* ><><d>
+IFS=.0:
+<1><45>
+IFS=.0:
+<Sun Dec  2 16:14:36 CET 2012>
+IFS=.0:
+<a  b- c.* ..d>
+IFS=.0:
+<1045>
 --endoutput
 
+--newpage SHV8
+--heading Shell variables - LANG LC_*
+--color red
+LANG LC_ALL LC_COLLATE LC_CTYPE LC_MESSAGE LC_NUMERIC
+--color black
+Bash locale settings.
+LANG - Used when category in LC_ not specified
+LC_ALL - overrides LANG and all LC_
+LC_COLLATE - collation order - mainly sorting filename expansion
+LC_CTYPE - character classes in filename expansion and pattern matching
+LC_MESSAGES - settings for $"" strings translations
+LC_NUMERIC - number formatting
+
+external programs also have locale specifications
+
+--newpage SHV8e
+--heading Shell variables - LANG LC_*
+--beginoutput
+p() {
+  printf '%s\n' "$1"; shift
+  printf ' %s' "$@" $'\n'
+}
+pf() {
+  printf '%s\n' "$1"; shift
+  printf "%s\n" "$@"
+  printf "%'.2f\n" "$@"
+}
+rm -rf /tmp/collate/; mkdir -p /tmp/collate/
+pushd /tmp/collate >/dev/null
+  touch {A..Z} {a..z} {и,ф,р} {č,Č,ň,ů,ü,ch}
+  LC_COLLATE=C; p "LC_COLLATE = $LC_COLLATE" *
+  LC_COLLATE=cs_CZ.utf8; p "LC_COLLATE = $LC_COLLATE" *
+  LC_CTYPE=C; p "LC_CTYPE = $LC_CTYPE" [[:lower:]]
+  LC_CTYPE=cs_CZ.utf8; p "LC_CTYPE = $LC_CTYPE" [[:lower:]]
+  LC_NUMERIC=C; pf "LC_NUMERIC = $LC_NUMERIC" 1234567.89
+  LC_NUMERIC=cs_CZ.utf8; pf "LC_NUMERIC = $LC_NUMERIC" 1234567,89
+popd >/dev/null
+--endoutput
+
+--newpage SHV8o
+--heading Shell variables - LANG LC_*
+--beginoutput
+$ ./16-bash-variables7.sh
+LC_COLLATE = C
+ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c ch d e f g h i j k l m n o p q r s t u v w x y z ü Č č ň ů и р ф 
+LC_COLLATE = cs_CZ.utf8
+ a A b B c C č Č d D e E f F g G h H ch i I j J k K l L m M n N ň o O p P q Q r R s S t T u U ů ü v V w W x X y Y z Z и р ф 
+LC_CTYPE = C
+ a b c d e f g h i j k l m n o p q r s t u v w x y z 
+LC_CTYPE = cs_CZ.utf8
+ a b c č d e f g h i j k l m n ň o p q r s t u ů ü v w x y z и р ф 
+LC_NUMERIC = C
+1234567.89
+1234567.89
+LC_NUMERIC = cs_CZ.utf8
+1234567,89
+1 234 567,89
+--endoutput
 
