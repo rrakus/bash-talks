@@ -32,7 +32,7 @@
 
 --## debugging?
 --##  - set -x
---##  - trap?
+--##  - trap? LINENO
 --##  - ???
 
 --## Du - cetnost slov? cetnost znaku
@@ -755,7 +755,7 @@ LC_NUMERIC - number formatting
 external programs also have locale specifications
 
 --newpage SHV8e
---heading Shell variables - LANG LC_*
+--heading Shell variables - LANG LC_* example
 --beginoutput
 p() {
   printf '%s\n' "$1"; shift
@@ -779,7 +779,7 @@ popd >/dev/null
 --endoutput
 
 --newpage SHV8o
---heading Shell variables - LANG LC_*
+--heading Shell variables - LANG LC_* example output
 --beginoutput
 $ ./16-bash-variables7.sh
 LC_COLLATE = C
@@ -796,5 +796,160 @@ LC_NUMERIC = C
 LC_NUMERIC = cs_CZ.utf8
 1234567,89
 1 234 567,89
+--endoutput
+
+--newpage SHV9
+--heading Shell variables - LINENO
+--color red
+LINENO
+--color black
+The line number in the script or shell function currently executing
+
+--newpage SHV9e
+--heading Shell variables - LINENO example
+--beginoutput
+echo 'START LINENO = '$LINENO
+
+f1() {
+echo 'f1 LINENO = '$LINENO
+}
+
+f2() {
+echo 'f2 LINENO = '$LINENO
+}
+f1;f2
+echo 'END LINENO = '$LINENO
+--endoutput
+
+--newpage SHV9o
+--heading Shell variables - LINENO example output
+--beginoutput
+$ ./17-bash-variables8.sh
+START LINENO = 2
+f1 LINENO = 5
+f2 LINENO = 9
+END LINENO = 12
+--endoutput
+
+--newpage SHV10
+--heading Shell variables - PATH
+--color red
+PATH
+--color black
+ * colon-separated list of directories
+ * bash looks for commands in those directories
+ * null length indicates current directory
+ * bash uses hash table
+ * changing PATH will clear hash
+
+--newpage SHV10e
+--heading Shell variables - PATH example
+--beginoutput
+#!/bin/bash
+dir=/tmp/pathtest
+rm -rf "$dir"; mkdir -p "$dir"; touch "$dir"/a
+opath=$PATH
+ppath()
+{
+  printf 'PATH:\n'
+  printf '%s\n' "$PATH"
+}
+
+ppath; ls "$dir"
+hash; type ls
+PATH='/:~/bin'
+hash; type ls
+ppath; ls "$dir"
+hash; type ls
+PATH=$opath
+hash; type ls
+ppath; ls "$dir"
+hash; type ls
+--endoutput
+
+--newpage SHV10o
+--heading Shell variables - PATH example output
+--beginoutput
+PATH:
+/usr/lib64/qt-3.3/bin:/usr/kerberos/sbin:/usr/kerberos/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/rrakus/cov-sa-linux64-5.4.0/bin:/home/rrakus/bin:/home/rrakus/cov-sa-linux64-5.4.0/bin
+a
+hits    command
+   1    /bin/rm
+   1    /bin/touch
+   1    /bin/mkdir
+   1    /bin/ls
+ls is hashed (/bin/ls)
+hash: hash table empty
+PATH:
+/:~/bin
+hash: hash table empty
+hash: hash table empty
+ls is /bin/ls
+PATH:
+/usr/lib64/qt-3.3/bin:/usr/kerberos/sbin:/usr/kerberos/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/rrakus/cov-sa-linux64-5.4.0/bin:/home/rrakus/bin:/home/rrakus/cov-sa-linux64-5.4.0/bin
+a
+hits    command
+   1    /bin/ls
+ls is hashed (/bin/ls)
+--endoutput
+
+--newpage SHV11
+--heading Shell variables - PIPESTATUS
+--color red
+PIPESTATUS
+--color black
+ * array variable
+ * list of exit statuses of most recent foreground processes of pipeline
+ * single command is also a pipeline
+
+--newpage SHV11e
+--heading Shell variables - PIPESTATUS example
+--beginoutput
+p()
+{
+  printf '%s\n' "PIPESTATUS:"
+  printf '%s\n' "$@"
+  printf '%s\n' "++++"
+}
+
+p "${PIPESTATUS[@]}"
+ls | sort | uniq | grep -q file | wc -l
+p "${PIPESTATUS[@]}"
+true | false | true | /not/a/command | true
+p "${PIPESTATUS[@]}"
+printf '%q\n' $(head -n66 /dev/urandom) | head -n1 | cat | sort | uniq | wc -l
+p "${PIPESTATUS[@]}"
+--endoutput
+
+--newpage SHV11o
+--heading Shell variables - PIPESTATUS example output
+--beginoutput
+PIPESTATUS:
+
+++++
+0
+PIPESTATUS:
+0
+0
+0
+1
+0
+++++
+PIPESTATUS:
+0
+1
+0
+127
+0
+++++
+1
+PIPESTATUS:
+141
+0
+0
+0
+0
+0
+++++
 --endoutput
 
