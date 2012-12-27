@@ -1030,3 +1030,47 @@ RANDOM: 19574
 RANDOM: 22353
 --endoutput
 
+--newpage SHV14
+--heading Shell variables - SECONDS
+--color red
+SECONDS
+--color black
+ * number of seconds since bash started
+ * assigning sets counter
+  * value then is assigned value plus seconds since assignment
+ * unsetting will remove special meaning
+
+--newpage SHV14e
+--heading Shell variables - SECONDS example
+--beginoutput
+#!/bin/bash
+p() {
+  printf 'SECONDS: %d\n' "$SECONDS"
+}
+
+p
+sleep 2; p
+sleep 2; p
+SECONDS=666; p
+sleep 2; p
+sleep 2; p
+unset SECONDS
+SECONDS=666; p
+sleep 2; p
+--endoutput
+
+--newpage SHV14o
+--heading Shell variables - SECONDS example output
+--beginoutput
+$ ./22-bash-variables13.sh
+SECONDS: 0
+SECONDS: 2
+SECONDS: 4
+SECONDS: 666
+SECONDS: 668
+SECONDS: 670
+SECONDS: 666
+SECONDS: 666
+--endoutput
+
+
