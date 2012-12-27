@@ -463,6 +463,8 @@ TODO
 --color red
 BASH_SOURCE BASH_LINENO BASHPID DIRSTACK FUNCNAME FUNCNEST GLOBIGNORE IFS LANG LC_ALL LC_COLLATE LC_CTYPE LC_MESSAGE LC_NUMERIC LINENO PATH PIPESTATUS PWD RANDOM SECONDS
 --color black
+ * if variable is unset it loses its special meaning, even if reset.
+ * not all can be unset
 
 --newpage SHV2
 --heading Shell variables - BASHPID
@@ -951,5 +953,80 @@ PIPESTATUS:
 0
 0
 ++++
+--endoutput
+
+--newpage SHV12
+--heading Shell variables - PWD
+--color red
+PWD
+--color black
+ * current working directory
+ * set by cd builtin (also pushd, ...)
+
+--newpage SHV12e
+--heading Shell variables - PWD example
+--beginoutput
+#!/bin/bash
+p() {
+  printf 'PWD: %s\n' "$PWD"
+}
+p
+pushd "$HOME"
+  p
+popd
+cd /etc
+p
+cd -
+p
+--endoutput
+
+--newpage SHV12o
+--heading Shell variables - PWD example output
+--beginoutput
+$ ./20-bash-variables11.sh
+PWD: /home/rrakus/git/bash-talks/bash-course-advanced/scripts
+~ ~/git/bash-talks/bash-course-advanced/scripts
+PWD: /home/rrakus
+~/git/bash-talks/bash-course-advanced/scripts
+PWD: /etc
+/home/rrakus/git/bash-talks/bash-course-advanced/scripts
+PWD: /home/rrakus/git/bash-talks/bash-course-advanced/scripts
+--endoutput
+
+--newpage SHV13
+--heading Shell variables - RANDOM
+--color red
+RANDOM
+--color black
+ * generates random number (0..32767) each time referenced
+ * assigning a value seeds RNG
+
+--newpage SHV13e
+--heading Shell variables - RANDOM example
+--beginoutput
+#!/bin/bash
+p() {
+  printf 'RANDOM: %d\n' "$RANDOM"
+}
+
+(($1)) && RANDOM="$1"
+p && p
+--endoutput
+
+--newpage SHV13o
+--heading Shell variables - RANDOM example output
+--beginoutput
+$ ./21-bash-variables12.sh
+RANDOM: 17763
+RANDOM: 2427
+$ ./21-bash-variables12.sh
+RANDOM: 1246
+RANDOM: 8837
+$ ./21-bash-variables12.sh 666
+RANDOM: 19574
+RANDOM: 22353
+$ ./21-bash-variables12.sh 666
+RANDOM: 19574
+RANDOM: 22353
 --endoutput
 
