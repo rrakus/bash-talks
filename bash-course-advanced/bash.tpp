@@ -1073,4 +1073,139 @@ SECONDS: 666
 SECONDS: 666
 --endoutput
 
+--newpage EVSP
+--heading echo vs printf
+--color red
+echo "$var"
+printf '%s\n' "$var"
+--color black
+echo
+ * useful only for basic printing
+ * is very simple
+ * don't use for values you don't know
+
+printf
+ * rather use exclusively
+ * you have 100% control of expansions
+ * is not that much simple
+
+--newpage EVSP1e
+--heading echo vs printf example
+--beginoutput
+#!/bin/bash
+_echo()
+{
+  echo "$@"
+}
+
+_printf()
+{
+  printf '%s\n' "$@"
+}
+echo ECHO:
+_echo "$@"
+echo PRINTF:
+_printf "$@"
+--endoutput
+
+--newpage EVSP1o
+--heading echo vs printf example output
+--beginoutput
+$ ./23-echovsprintf1.sh
+ECHO:
+
+PRINTF:
+
+$ ./23-echovsprintf1.sh '-e' '-n' 'WTF?'
+ECHO:
+WTF?PRINTF:
+-e
+-n
+WTF?
+--endoutput
+
+--newpage EVSP2
+--heading echo vs printf - printf
+--color red
+printf [-v var] format [arguments]
+--color black
+ * very similar to C-like printf
+ * along with printf(1) formats also %b, %q, %(datefmt)T
+ * format is reused to consume all arguments
+ * if format requires more arguments than null value used (or 0)
+ * -v only assings output to variable var
+
+ %b - allow to expand backslash escape sequences
+ %q - variable printed in format that can be reused as input
+ %(datefmt)T - datetime string strftime(3) format
+             - argument is number of seconds since the epoch
+             - or -1 is current time
+             - and -2 is time the shell was invoked
+
+--newpage EVSP2e
+--heading echo vs printf - printf example 1
+--beginoutput
+#!/bin/bash
+printf '%s\n' "$@"
+--endoutput
+
+--newpage EVSP2o
+--heading echo vs printf - printf example 1 output
+--beginoutput
+$ ./24-echovsprintf2.sh these are just 'simple strings'
+these
+are
+just
+simple strings
+$ ./24-echovsprintf2.sh $(head -1 /dev/urandom)
+%:�X����&%v�
+--endoutput
+
+--newpage EVSP3e
+--heading echo vs printf - printf example 2
+--beginoutput
+#!/bin/bash
+printf '%q\n' "$@"
+--endoutput
+
+--newpage EVSP3o
+--heading echo vs printf - printf example 2 output
+--beginoutput
+$ ./25-echovsprintf3.sh 'String' 'number:' '666' 'escaped:' '^C        ^D'
+String
+number:
+666
+escaped:
+$'\003\t\004'
+$ ./25-echovsprintf3.sh $(head -1 /dev/urandom)
+$'lAo\217\\\320\274\004[d'
+--endoutput
+
+--newpage EVSP4e
+--heading echo vs printf - printf example 3
+--beginoutput
+#!/bin/bash
+red='\e[0;31m'
+green='\e[0;32m'
+off='\e[0m'
+
+printf 'RED: %b%s%b\n' "$red" "$1" "$off"
+printf 'GREEN: %b%s%b\n' "$green" "$1" "$off"
+printf '%s\n' ++++
+printf 'RED no-off: %b%s\n' "$red" "$1"
+printf 'GREEN no-off: %b%s\n' "$green" "$1"
+printf '%s\n' ++++
+--endoutput
+
+--newpage EVSP4o
+--heading echo vs printf - printf example 3 output
+--beginoutput
+$ ./26-echovsprintf4.sh blablabla
+RED: blablabla
+GREEN: blablabla
+++++
+RED no-off: blablabla
+GREEN no-off: blablabla
+++++
+--endoutput
 
