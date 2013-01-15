@@ -1088,6 +1088,7 @@ printf
  * rather use exclusively
  * you have 100% control of expansions
  * is not that much simple
+ * portable
 
 --newpage EVSP1e
 --heading echo vs printf example
@@ -1208,4 +1209,169 @@ RED no-off: blablabla
 GREEN no-off: blablabla
 ++++
 --endoutput
+
+--newpage EVSP5e
+--heading echo vs printf - printf example 4
+--beginoutput
+#!/bin/bash
+var="some text"
+
+printf 'Print text in quotes "%s"\n' "$var"
+--endoutput
+
+--newpage EVSP5o
+--heading echo vs printf - printf example 4 output
+--beginoutput
+$ ./27-echovsprintf5.sh
+Print text in quotes "some text"
+--endoutput
+
+--newpage EVSP6e
+--heading echo vs printf - printf example 5
+--beginoutput
+#!/bin/bash
+long1=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+long2=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+long3=645873458735873548736458763845.72456345
+
+printf 'Tabular example\n'
+printf '%-15s%-15s%15s\n' Name Surname Value
+printf '%-15s%-15s%15s\n' ~~~~~ ~~~~~ ~~~~~
+printf '%-15s%-15s%15.2f\n' Roman Rakus 123.456
+printf '%-15s%-15s%15.2f\n' Karel Gott  678
+printf '%-15s%-15s%15.2f\n' Xyz a
+printf '%-15s%-15s%15.2f\n' '' '' ''
+printf '%-15s%-15s%15.2f\n' "$long1" "$long2" "$long3"
+--endoutput
+
+--newpage EVSP6o
+--heading echo vs printf - printf example 5 output
+--beginoutput
+$ ./28-echovsprintf6.sh
+Tabular example
+Name           Surname                  Value
+~~~~~          ~~~~~                    ~~~~~
+Roman          Rakus                   123.46
+Karel          Gott                    678.00
+Xyz            a                         0.00
+                                         0.00
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb645873458735873548740653481984.00
+--endoutput
+
+--newpage PME
+--heading Extended pattern matching
+--color red
+[[ expr == pattern ]]
+[[ expr != pattern ]]
+[[ expr =~ extended pattern ]]
+BASH_REMATCH
+--color black
+
+ * Word splitting not performed
+ * Filename expansion not performed
+ * pattern is same like in filename expansion
+ * extended pattern same as in regex(3)
+
+--newpage PME1
+--heading Extended pattern matching == !=
+ * return value 0 if matched, 1 otherwise
+ * part of pattern can be quoted - forces to match a string
+
+--newpage PME1e
+--heading Extended pattern matching == != example
+--beginoutput
+#!/bin/bash
+if [[ $1 == ?a*U"?*[abc]" ]]; then
+  echo MATCH
+else
+  echo NOT MATCH
+fi
+--endoutput
+
+--newpage PME1o
+--heading Extended pattern matching == != example output
+--beginoutput
+$ ./29-patmatch1.sh '?a*U"?*[abc]"'
+NOT MATCH
+
+$ ./29-patmatch1.sh '?a*U?*[abc]'
+MATCH
+
+$ ./29-patmatch1.sh 'zasdvdU?*[abc]'
+MATCH
+
+$ ./29-patmatch1.sh 'zasdvdUdsdfsdfa'
+NOT MATCH
+--endoutput
+
+--newpage PME2
+--heading Extended pattern matching =~
+ * uses regex(3)
+ * pattern matching described in regex(7)
+ * parenthesized subexpressions' matches stored in BASH_REMATCH
+ * BASH_REMATCH[0] is portion of the string matching the entire regexp
+ return value
+   0 - matched
+   1 - not matched
+   2 - syntax error in rexexp
+
+--newpage PME2e
+--heading Extended pattern matching =~ example
+--beginoutput
+#!/bin/bash
+re_alnum='^[[:blank:]]*([[:alnum:]]+)[[:blank:]]*'
+if [[ $1 =~ $re_alnum ]]; then
+  printf 'MATCH: %s\n' "${BASH_REMATCH[1]}"
+else
+  echo NOT MATCH
+fi
+--endoutput
+
+--newpage PME2o
+--heading Extended pattern matching =~ example output
+--beginoutput
+$ ./30-patmatch2.sh
+NOT MATCH
+
+$ ./30-patmatch2.sh 'hello'
+MATCH: hello
+
+$ ./30-patmatch2.sh 'hello world'
+MATCH: hello
+--endoutput
+
+--newpage PME3e
+--heading Extended pattern matching =~ example 2
+--beginoutput
+#!/bin/bash
+re_alnum='([[:alpha:]]+):[[:blank:]]*([[:digit:]]+)'
+if [[ $1 =~ $re_alnum ]]; then
+  printf 'MATCH\n'
+  printf 'String portion: <%s>\n' "${BASH_REMATCH[1]}"
+  printf 'Number portion: <%d>\n' "${BASH_REMATCH[2]}"
+  printf 'This matched entire regexp: <%s>\n' "${BASH_REMATCH[0]}"
+else
+  printf '<%s> does not match <%s>\n' "$1" "$re_alnum"
+fi
+--endoutput
+
+--newpage PME3o
+--heading Extended pattern matching =~ example 2 output
+--beginoutput
+$ ./31-patmatch3.sh 'Hello'
+<Hello> does not match <([[:alpha:]]+):[[:blank:]]*([[:digit:]]+)>
+
+$ ./31-patmatch3.sh 'a:3'
+MATCH
+String portion: <a>
+Number portion: <3>
+This matched entire regexp: <a:3>
+
+$ ./31-patmatch3.sh '123a:3asd'
+MATCH
+String portion: <a>
+Number portion: <3>
+This matched entire regexp: <a:3>
+--endoutput
+
 
