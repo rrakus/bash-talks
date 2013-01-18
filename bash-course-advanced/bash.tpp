@@ -1374,4 +1374,163 @@ Number portion: <3>
 This matched entire regexp: <a:3>
 --endoutput
 
+--newpage READ1
+--heading read builtin
+--color red
+read [-ers] [-a aname] [-d delim] [-i text] [-n nchars] [-N nchars] [-p prompt] [-t timeout] [-u fd] [name ...]
+--color black
+ * read line from stdin
+ * 1st word assigned to 1st name, 2nd word to 2nd name...
+ * leftover words assigned to last name
+ * to leftover names assigned empty values
+ * IFS used to split words
+ * \ removes special meaning
+ * return status
+  * 0
+  * 1 when EOF
+  * >128 on timeout
+  * not 0 on invalid fd in -u option
+
+--newpage READ2
+--heading read builtin - options
+-a aname
+ * words assigned to indices of array aname
+ * starting from 0
+ * elements of aname array are removed
+ * name arguments are ignored
+
+-d delim
+ * the first char of delim is used to terminat input line, rather than newline
+
+-e
+ * use readline to obtain the line
+
+--newpage READ3
+--heading read builtin - options cont.
+-i text
+ * If Readline is being used to read the line, text is placed into the editing buffer before editing begins.
+
+-n nchars
+ * returns after reading nchars
+ * but honor a delimiter
+
+-N nchars
+ * read exactly nchars characters
+ * can stop on EOF or timeout
+
+-p prompt
+ * display prompt before reading
+ * only on terminal input
+
+--newpage READ4
+--heading read builtin - options cont.
+-r
+ * backslash has no special meaning
+
+-s
+ * silent mode, only on terminal
+ * characters are not echoed
+
+-t timeout
+ * fail if complete line is not read within timeout
+ * only when readin from terminal, pipe or other special files
+ * no effect when reading from regular file
+
+-u fd
+ * read from file descriptor fd
+
+--newpage READ5e
+--heading read builtin example
+--beginoutput
+#!/bin/bash
+read -p 'Name: ' name
+read -p 'Surname: ' surname
+read -p 'Age: ' age
+
+printf 'Your name is %s %s and you are %d age old\n' "$name" "$surname" "$age"
+--endoutput
+
+--newpage READ5o
+--heading read builtin example output
+--beginoutput
+$ ./32-read1.sh
+Name: Roman
+Surname: Rakus
+Age: 29
+Your name is Roman Rakus and you are 29 age old
+
+$ ./32-read1.sh
+Name: \t\r\n
+Surname: \a\b\c
+Age: 1
+Your name is trn abc and you are 1 age old
+--endoutput
+
+--newpage READ6e
+--heading read builtin example 2
+--beginoutput
+#!/bin/bash
+while read -r name surname age
+do
+  printf 'Your name is %s %s and you are %d age old\n' "$name" "$surname" "$age"
+done < 01-readdata
+--endoutput
+
+--newpage READ6o
+--heading read builtin example 2 output
+--beginoutput
+$ ./33-read2.sh
+Your name is Roman Rakus and you are 29 age old
+Your name is \t\r\n \a\b\c and you are 1 age old
+./33-read2.sh: line 4: printf: 1 2 3 4: invalid number
+Your name is more numbers and you are 1 age old
+Your name is without number and you are 0 age old
+Your name is nothing follows and you are 0 age old
+Your name is   and you are 0 age old
+--endoutput
+
+--newpage READ7e
+--heading read builtin example 3 example
+--beginoutput
+#!/bin/bash
+while IFS=: read -r name surname age
+do
+  printf 'field1:<%q> field2:<%q> field3<%d>\n' "$name" "$surname" "$age"
+done < 02-readdata
+--endoutput
+
+--newpage READ7o
+--heading read builtin example 3 example output
+--beginoutput
+field1:<Roman> field2:<Rakus> field3<29>
+field1:<a\ b\ c> field2:<\ tururu> field3<3>
+field1:<''> field2:<''> field3<0>
+field1:<$' \t'> field2:<$' \t'> field3<1>
+--endoutput
+
+--newpage READ8e
+--heading read builtin example 4 example
+--beginoutput
+#!/bin/bash
+re_bash_line_comment='^[[:blank:]]*#(.*)$'
+while IFS= read -r line
+do
+  if [[ $line =~ $re_bash_line_comment ]]; then
+    continue
+  else
+    printf '%s\n' "$line"
+  fi
+done
+--endoutput
+
+--newpage READ8o
+--heading read builtin example 4 example output
+--beginoutput
+$ ./35-read4.sh < /etc/fstab
+
+UUID=20c39450-6284-43e6-a21d-955933c32b0f /                       ext4    defaults        1 1
+UUID=83e816c6-a297-4163-beb1-03debd6298d6 /boot                   ext4    defaults        1 2
+UUID=9741ba0d-53fe-43e8-b0ee-ba89dfbdb427 /home                   ext4    defaults        1 2
+UUID=a276fe29-606f-4176-95e6-2e167491d085 swap                    swap    defaults        0 0
+--endoutput
 
