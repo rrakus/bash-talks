@@ -40,8 +40,8 @@
 
 --newpage schedule
 --heading Schedule
- * 2 lecters, each 3 hours long
- * 3rd lecture for questions
+ * 3 lecters, each 3 hours long
+ * 3rd lecture also for questions
  * Ask whenever you want
  * Course will consist of theory-example-exercise parts
  * 2 homeworks
@@ -52,7 +52,7 @@
  * Shell variables - IFS, PATH, PIPESTATUS, FUNCNEST, GLOBIGNORE...
  * echo vs printf
  * Pattern matching in [[ expression ]]
- * read, mapfile builtins
+ * read
  * Process substitution <() and >()
  * trap builtin
  * a bit of debugging
@@ -1532,5 +1532,101 @@ UUID=20c39450-6284-43e6-a21d-955933c32b0f /                       ext4    defaul
 UUID=83e816c6-a297-4163-beb1-03debd6298d6 /boot                   ext4    defaults        1 2
 UUID=9741ba0d-53fe-43e8-b0ee-ba89dfbdb427 /home                   ext4    defaults        1 2
 UUID=a276fe29-606f-4176-95e6-2e167491d085 swap                    swap    defaults        0 0
+--endoutput
+
+--newpage PSUB1
+--heading Process substitution
+--color red
+<(list)
+>(list)
+--color black
+ * some form of temporary file
+ * uses named pipe (FIFO) or file in /dev/fd
+ * the result is file name (fifo, or fd)
+ * >(list) - writing to file will provide stdin for list
+ * <(list) - file will contain output of list
+
+--newpage PSUB1e
+--heading Process substitution 1 example
+--beginoutput
+#!/bin/bash
+echo <(echo hi)
+cat <(echo hi)
+
+tar cf >(bzip2 -c > ./scripts.tar.bz2) *.sh
+--endoutput
+
+--newpage PSUB1o
+--heading Process substitution 1 example output
+--beginoutput
+$ ./36-psub1.sh
+/dev/fd/63
+hi
+--endoutput
+And file ./scripts.tar.bz2 contains compressed all shell files
+
+--newpage PSUB2e
+--heading Process substitution 2 example
+--beginoutput
+#!/bin/bash
+# Show differences between output of 2 programs
+pn=bash-4.2-coverity.patch
+f1=~/koji/bash/bash.spec
+f2=~/brew/bash/bash.spec
+diff -up <(grep -n "$pn" "$f1") <(grep -n "$pn" "$f2")
+--endoutput
+
+--newpage PSUB2o
+--heading Process substitution 2 example output
+--beginoutput
+ $ ./37-psub2.sh
+ --- /dev/fd/63  2013-01-20 19:04:02.067758355 +0100
+ +++ /dev/fd/62  2013-01-20 19:04:02.067758355 +0100
+ @@ -1 +0,0 @@
+ -98:Patch121: bash-4.2-coverity.patch
+--endoutput
+
+--newpage PSUB3e
+--heading Process substitution 3 example
+--beginoutput
+#!/bin/bash
+# Process output from some program
+re_patch='^%patch([[:digit:]]+)[[:space:]]+(.*)'
+declare -a patches
+while IFS= read -r line
+do
+#  echo $line
+  if [[ $line =~ $re_patch ]]; then
+    i="${BASH_REMATCH[1]}"
+    opts="${BASH_REMATCH[2]}"
+    patches["$((10#$i))"]="$opts"
+  fi
+done < <(grep -- '\%' ~/koji/bash/bash.spec)
+
+for i in "${!patches[@]}"; do
+  printf 'Patch number %d with options <%s>\n' "$i" "${patches[$i]}"
+done
+--endoutput
+
+--newpage PSUB3o
+--heading Process substitution 3 example output
+--beginoutput
+$ ./38-psub3.sh
+Patch number 1 with options <-p0 -b .001>
+Patch number 2 with options <-p0 -b .002>
+Patch number 3 with options <-p0 -b .003>
+Patch number 4 with options <-p0 -b .004>
+Patch number 5 with options <-p0 -b .005>
+Patch number 6 with options <-p0 -b .006>
+Patch number 7 with options <-p0 -b .007>
+Patch number 8 with options <-p0 -b .008>
+Patch number 9 with options <-p0 -b .009>
+Patch number 10 with options <-p0 -b .010>
+Patch number 11 with options <-p0 -b .011>
+Patch number 12 with options <-p0 -b .012>
+Patch number 13 with options <-p0 -b .013>
+Patch number 14 with options <-p0 -b .014>
+Patch number 15 with options <-p0 -b .015>
+...
 --endoutput
 
