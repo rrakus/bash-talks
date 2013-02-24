@@ -1630,3 +1630,163 @@ Patch number 15 with options <-p0 -b .015>
 ...
 --endoutput
 
+--newpage TRAP1
+--heading trap builtin
+--color red
+trap [-lp] [arg] [sigspec ...]
+--color black
+ * arg is read and executed when signal sigspec is received
+ * sigspec is signal number or signal name
+
+options
+ -l => list signal names and numbers
+ -p sigspec => display commands
+ -p or none => print commands, may be reused as bash input
+
+--newpage TRAP2
+--heading trap builtin cont.
+--color red
+trap [-lp] [arg] [sigspec ...]
+--color black
+sigspec is 0 or EXIT
+ * arg is executed on shell exit
+
+sigspec is DEBUG
+ * arg executed before every simple command, for, case, select, function
+ * shopt option extdebug
+
+sigspec is RETURN
+ * arg executed when function or shell sourced finishes
+
+sigspec is ERR
+ * arg executed when simple command has non-zero exit status
+ * not for command in until, while, if, elif, && || list, ! inversion
+
+--newpage TRAP3e
+--heading trap builtin 3 example
+--beginoutput
+#!/bin/bash
+trapfpe()
+{
+  printf 'Floating point exception catched\n'
+}
+
+trapterm()
+{
+  printf 'No no, try harder\n'
+}
+
+trap 'trapfpe' SIGFPE
+trap 'trapterm' SIGTERM SIGINT
+printf 'List of trapped signals:\n'
+trap
+printf 'Send SIGFPE or SIGTERM to process ID %d\n' "$$"
+while :; do
+  sleep 9999&
+  printf 'Sleep process ID %d\n' "$!"
+  wait
+done
+--endoutput
+
+--newpage TRAP3o
+--heading trap builtin 3 example output
+--beginoutput
+$ ./39-trap1.sh
+List of trapped signals:
+trap -- 'trapterm' SIGINT
+trap -- 'trapfpe' SIGFPE
+trap -- 'trapterm' SIGTERM
+Send SIGFPE or SIGTERM to process ID 29184
+Sleep process ID 29185
+^CNo no, try harder
+Sleep process ID 29210
+^CNo no, try harder
+Sleep process ID 29229
+Killed
+--endoutput
+
+--newpage TRAP4e
+--heading trap builtin 4 example
+--beginoutput
+#!/bin/bash
+tempfile=$(mktemp)
+clean(){
+  printf 'Cleaning\n'
+  rm -rf "$tempfile"
+}
+trap clean EXIT
+file "$tempfile"
+printf "I'm doing anything\n"
+sleep 5
+printf "I'm done\n"
+--endoutput
+
+--newpage TRAP4o
+--heading trap builtin 4 example output
+--beginoutput
+$ ./40-trap2.sh
+/tmp/tmp.mI3WaaUs5H: empty
+I'm doing anything
+I'm done
+Cleaning
+
+$ ./40-trap1.sh
+/tmp/tmp.J883MAujFU: empty
+I'm doing anything
+^CCleaning
+--endoutput
+
+--newpage DEBUG1
+--heading Debugging
+Some usefull tips how to debug
+ * set -x
+ * set -v
+ * trap DEBUG
+ * LINENO, BASH_LINENO, BASH_SOURCE, FUNCNAME
+
+--newpage DEBUG2e
+--heading Debugging example
+--beginoutput
+#!/bin/bash
+val=0
+fce()
+{
+  local i
+  for i in "${!BASH_SOURCE[@]}"; do
+    printf '%s[%d]<-' "${BASH_SOURCE[$i]}" "${BASH_LINENO[$i]}"
+  done
+  printf '\nval = %s\n' "$val"
+} >&2
+trap 'fce "$LINENO"' DEBUG
+
+for i in a b c
+do
+  ((++val))
+  echo "$i"
+done
+--endoutput
+
+--newpage DEBUG2o
+--heading Debugging example output
+--beginoutput
+$ ./41-debug1.sh >/dev/null
+./41-debug1.sh[13]<-./41-debug1.sh[0]<-
+val = 0
+./41-debug1.sh[15]<-./41-debug1.sh[0]<-
+val = 0
+./41-debug1.sh[16]<-./41-debug1.sh[0]<-
+val = 1
+./41-debug1.sh[13]<-./41-debug1.sh[0]<-
+val = 1
+./41-debug1.sh[15]<-./41-debug1.sh[0]<-
+val = 1
+./41-debug1.sh[16]<-./41-debug1.sh[0]<-
+val = 2
+./41-debug1.sh[13]<-./41-debug1.sh[0]<-
+val = 2
+./41-debug1.sh[15]<-./41-debug1.sh[0]<-
+val = 2
+./41-debug1.sh[16]<-./41-debug1.sh[0]<-
+val = 3
+--endoutput
+
