@@ -5,42 +5,20 @@
 --bgcolor white
 
 --## TODO:
---## advanced parameter expansion ${var:-par} etc.
 
---## IFS, PATH and maybe other shell variables
+--## examples, exercises
 
---## echo vs printf
---##  - long text with "" maybe others and var expansion
---##  - -e -n and other variable values
-
---## [[ ={=,~} ]] regexp pattern matching, BASH_REMATCH
---##  - match variable with some regexp
---##  - ???
-
---## read builtin - while read with < redirection, TMOUT
---## - use read, IFS=, == and =~ regexp matching
---## - ???
-
---## <() >() substitutions
---## - diff of two commands
---## - use read, IFS... and output of some command:
---##   while IFS= read... < <(command)
-
---## trap builtin
---##  - to catch some signal
---##  - to do something when exiting
-
---## debugging?
---##  - set -x
---##  - trap? LINENO
---##  - ???
-
---## Du - cetnost slov? cetnost znaku
---## du - neco jako basename, 
+--## DUs/exercises
+--##------------------
+--## neco jako basename, dirname - parameter exapnsion exercise
+--## vypsat pole s indexama a hodnotama
+--## GLOBIGNORE? IFS? PIPESTATUS?
+--## cetnost slov? cetnost znaku, pretty table print
+--## 
 
 --newpage schedule
 --heading Schedule
- * 3 lecters, each 3 hours long
+ * 3 lectures, each 3 hours long
  * 3rd lecture also for questions
  * Ask whenever you want
  * Course will consist of theory-example-exercise parts
@@ -455,8 +433,9 @@ fo: foobarbazfoobarbaz
 --newpage APE-ex
 --heading Advanced parameter expansion exercise
 --color green
-TODO
+Write a script which will act like basename - strip directory from filename
 --color black
+--##printf '%s\n' "${1##*/}"
 
 --newpage SHV
 --heading Shell variables
@@ -1073,6 +1052,10 @@ SECONDS: 666
 SECONDS: 666
 --endoutput
 
+--newpage SHV15e
+--heading Shell variables - exercise
+Write a script which will add directory to PATH. Will check if dir is already in the list.
+
 --newpage EVSP
 --heading echo vs printf
 --color red
@@ -1257,6 +1240,13 @@ Xyz            a                         0.00
                                          0.00
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb645873458735873548740653481984.00
 --endoutput
+
+--newpage EVSP7e
+--heading echo vs printf - exercise
+
+--newpage HW2
+--heading Home work 2
+Write a script which will print in table list of characters and count of them. Will read from stdin or from file.
 
 --newpage PME
 --heading Extended pattern matching
