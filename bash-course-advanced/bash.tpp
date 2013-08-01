@@ -1658,7 +1658,7 @@ sigspec is ERR
 #!/bin/bash
 trapfpe()
 {
-  printf 'Floating point exception catched\n'
+  printf 'Floating point exception caught\n'
 }
 
 trapterm()
